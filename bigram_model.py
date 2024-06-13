@@ -17,3 +17,5 @@ import torch.nn as nn
 import torch.nn.functional as F
 # Same as Andrej Karpathy used to reproduce the random numbers
 torch.manual_seed(1337) 
+from load_data import getDataset
+
