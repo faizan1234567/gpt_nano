@@ -1,5 +1,7 @@
 """
 read, encode, and load the dataset
+
+python load_data.py
 """
 from pathlib import Path
 import os
@@ -39,8 +41,8 @@ class getDataset():
                 text = file.read()
             return text
         except FileNotFoundError:
+            print(f"File not Found: {self.text_file}")
             sys.exit(1)
-            return 
     
     def split_data(self, split_ratio: float = 0.9):
         """
@@ -81,10 +83,10 @@ class getDataset():
         ix = torch.randint(len(data) - self.block_size, (self.batch_size,))
         x = torch.stack([data[i:i+self.block_size] for i in ix])
         y = torch.stack([data[i+1:i+1+self.block_size] for i in ix])
-        return x, y
+        return (x, y)
         
 
-
+# test code
 if __name__ == "__main__":
     dataset = getDataset(text_file='dataset/input.txt', block_size=8, 
                          batch_size=4)
