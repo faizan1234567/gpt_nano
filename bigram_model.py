@@ -57,7 +57,7 @@ class BigramLanguageModel(nn.Module):
             idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
         return idx
 
-
+# TODO: debug the code for understanding how things work under the hood
 if __name__ == "__main__":
     vocab_size = 65
     m = BigramLanguageModel(vocab_size)
