@@ -1,0 +1,7 @@
+# don't push pycache directory
+__pycache__/*
+
+# ignore all kind of weights 
+*.pth
+*.pt
+*.ckpt
