@@ -1,5 +1,6 @@
 """
-read, encode, and load the dataset
+read, encode, and load the dataset for building character level 
+text generator.
 
 python load_data.py
 """
