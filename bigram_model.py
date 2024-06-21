@@ -20,3 +20,7 @@ import torch.nn.functional as F
 torch.manual_seed(1337) 
 from load_data import getDataset
 
+
+
+if __name__ == "__main__":
+    pass
