@@ -1,5 +1,5 @@
 # don't push pycache directory
-__pycache__/
+__pycache__/*
 
 # ignore all kind of weights 
 *.pth
