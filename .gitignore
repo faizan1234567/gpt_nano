@@ -1,5 +1,6 @@
 # don't push pycache directory
 __pycache__/*
+.vscode/*
 
 # ignore all kind of weights 
 *.pth

@@ -69,4 +69,4 @@ if __name__ == "__main__":
     print(logits.shape)
     print(loss)
 
-    print(dataset.decode(m.generate(idx = torch.zeros((1, 1), dtype=torch.long), max_new_tokens=100)[0].tolist()))
+    print(dataset.decode(m.generate(idx = torch.zeros((1, 1), dtype=torch.long), max_new_tokens=50)[0].tolist()))
