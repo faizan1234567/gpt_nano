@@ -1,4 +1,7 @@
 # don't push pycache directory
+
+# python pycache
+**/__pycache__
 __pycache__/*
 configs/__pycache__/*
 .vscode/*
