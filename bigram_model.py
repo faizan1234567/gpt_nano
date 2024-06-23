@@ -69,6 +69,21 @@ class BigramLanguageModel(nn.Module):
             idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
         return idx
 
+# Get avg loss
+@torch.no_grad()
+def estimate_loss(eval_iters, device):
+    out = {}
+    model.eval()
+    for split in ['train', 'val']:
+        losses = torch.zeros(eval_iters)
+        for k in range(eval_iters):
+            X, Y = dataset.get_batch(split, 0.9)
+            logits, loss = model(X.to(device), Y.to(device))
+            losses[k] = loss.item()
+        out[split] = losses.mean()
+    model.train()
+    return out
+
 
 if __name__ == "__main__":
     # Read from the command line
@@ -90,9 +105,12 @@ if __name__ == "__main__":
 
     logger.addHandler(stream_handler)
 
+    # if cuda available train with it
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+
     # Define model
     vocab_size = config.dataset.vocab_size
-    model = BigramLanguageModel(vocab_size)
+    model = BigramLanguageModel(vocab_size).to(device)
     
     # Prepare dataset
     dataset = getDataset(text_file=config.dataset.fname, block_size=config.general.block_size, 
@@ -110,18 +128,24 @@ if __name__ == "__main__":
         optimizer = torch.optim.AdamW(model.parameters(), config.training.lr)
 
         # Typical pytorch training loop
-        logger.info("Training")
-        for iter in tqdm(range(config.training.iterations), mininterval=0.2):
+        logger.info("Training\n")
+
+        for iter in range(config.training.iterations):
+             
+            if iter % config.training.eval_interval == 0:
+                losses = estimate_loss(config.training.eval_iters, device)
+                print(f"step {iter: 05d}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
+
 
             # Sample a batch of data
             xb, yb =  dataset.get_batch("train", config.dataset.train_split) 
-
+            xb, yb  = xb.to(device), yb.to(device)
             # Evaluate the loss
             logits, loss = model(xb, yb)
             optimizer.zero_grad(set_to_none=True)
             loss.backward()
             optimizer.step()
-        
+        print()
         logger.info(f"Loss after training: {loss.item()}")
 
     # Generate the text
