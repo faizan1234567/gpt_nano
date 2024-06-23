@@ -1,0 +1,25 @@
+# configs to develop and train a bigram language model
+
+# training settings
+training:
+  batch_size: 4
+  lr: 0.001
+  iterations: 10000
+  train: True
+
+# dataset settings
+dataset:
+  vocab_size: 65
+  train_split: 0.9
+  fname: dataset/input.txt
+
+# inference 
+inference:
+  max_new_tokens: 500
+
+general:
+  log: INFO
+  block_size: 8
+
+
+

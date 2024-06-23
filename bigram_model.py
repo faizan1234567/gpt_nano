@@ -15,21 +15,32 @@ python bigram_model.py -h
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-# Same as Andrej Karpathy used to reproduce the random numbers
+
+# Reproducibility
 torch.manual_seed(1337) 
+
 from load_data import getDataset
 
-# code borrow from Andrej Karpathy's nanoGPT tutorial: https://colab.research.google.com/drive/1JMLa53HDuA-i7ZBmqV7ZnA3c_fvtXnx-?usp=sharing#scrollTo=nql_1ER53oCf
+import argparse
+import yaml
+import os
+from pathlib import Path
+from configs import from_dict
+import logging
+from tqdm import tqdm
+
+
+# Bigram language model
 class BigramLanguageModel(nn.Module):
 
     def __init__(self, vocab_size):
         super().__init__()
-        # each token directly reads off the logits for the next token from a lookup table
+        # Each token directly reads off the logits for the next token from a lookup table
         self.token_embedding_table = nn.Embedding(vocab_size, vocab_size)
 
     def forward(self, idx, targets=None):
 
-        # idx and targets are both (B,T) tensor of integers
+        # Idx and targets are both (B,T) tensor of integers
         logits = self.token_embedding_table(idx) # (B,T,C)
 
         if targets is None:
@@ -43,30 +54,75 @@ class BigramLanguageModel(nn.Module):
         return logits, loss
 
     def generate(self, idx, max_new_tokens):
-        # idx is (B, T) array of indices in the current context
+        # Idx is (B, T) array of indices in the current context
         for _ in range(max_new_tokens):
-            # get the predictions
+            # Get the predictions
             logits, loss = self(idx)
-            # focus only on the last time step
+            # Focus only on the last time step
             logits = logits[:, -1, :] # becomes (B, C)
-            # apply softmax to get probabilities
+            # Apply softmax to get probabilities
             probs = F.softmax(logits, dim=-1) # (B, C)
-            # sample from the distribution
+            # Sample from the distribution
             idx_next = torch.multinomial(probs, num_samples=1) # (B, 1)
-            # append sampled index to the running sequence
+            # Append sampled index to the running sequence
             idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
         return idx
 
-# TODO: debug the code for understanding how things work under the hood
-if __name__ == "__main__":
-    vocab_size = 65
-    m = BigramLanguageModel(vocab_size)
-    
-    dataset = getDataset(text_file='dataset/input.txt', block_size=8, 
-                         batch_size=4)
-    xb, yb = dataset.get_batch("train", 0.9)                     
-    logits, loss = m(xb, yb)
-    print(logits.shape)
-    print(loss)
 
-    print(dataset.decode(m.generate(idx = torch.zeros((1, 1), dtype=torch.long), max_new_tokens=50)[0].tolist()))
+if __name__ == "__main__":
+    # Read from the command line
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--cfg', default='config/bigram.yaml', help='config file path')
+    args = parser.parse_args()
+
+    # Init config
+    config = yaml.safe_load(Path(args.cfg).open('r'))
+    config = from_dict(config)  # convert dict to object
+
+    # Init logger
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+
+    stream_handler = logging.StreamHandler()
+    formatter = logging.Formatter(fmt= "%(asctime)s: %(message)s", datefmt= '%Y-%m-%d %H:%M:%S')
+    stream_handler.setFormatter(formatter)
+
+    logger.addHandler(stream_handler)
+
+    # Define model
+    vocab_size = config.dataset.vocab_size
+    model = BigramLanguageModel(vocab_size)
+    
+    # Prepare dataset
+    dataset = getDataset(text_file=config.dataset.fname, block_size=config.general.block_size, 
+                         batch_size=config.training.batch_size)
+    
+    
+    if not config.training.train:
+        logger.info("Without training") 
+        xb, yb = dataset.get_batch("train", config.dataset.train_split)                    
+        logits, loss = model(xb, yb)
+        logger.info(f"Loss without training: {loss.item()} ")
+
+    else:
+        # Train
+        optimizer = torch.optim.AdamW(model.parameters(), config.training.lr)
+
+        # Typical pytorch training loop
+        logger.info("Training")
+        for iter in tqdm(range(config.training.iterations), mininterval=0.2):
+
+            # Sample a batch of data
+            xb, yb =  dataset.get_batch("train", config.dataset.train_split) 
+
+            # Evaluate the loss
+            logits, loss = model(xb, yb)
+            optimizer.zero_grad(set_to_none=True)
+            loss.backward()
+            optimizer.step()
+        
+        logger.info(f"Loss after training: {loss.item()}")
+
+    # Generate the text
+    print("\nThe AI poet:")
+    print(dataset.decode(model.generate(idx = torch.zeros((1, 1), dtype=torch.long), max_new_tokens=config.inference.max_new_tokens)[0].tolist()))
