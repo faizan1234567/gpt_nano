@@ -1,4 +1,5 @@
 """
+=====================================================================================
 Train a bigram language model to predict the next word in the sequence using only 
 the previous word. 
 
@@ -10,7 +11,7 @@ that the probability of a word only depends on the preceding word.
 
 Author: Muhammad Faizan
 python bigram_model.py -h
-python bigram_model.py --cfg <path>
+=====================================================================================
 """
 
 import torch
