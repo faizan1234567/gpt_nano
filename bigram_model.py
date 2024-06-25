@@ -88,7 +88,7 @@ def estimate_loss(eval_iters, device):
 if __name__ == "__main__":
     # Read from the command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('--cfg', default='config/bigram.yaml', help='config file path')
+    parser.add_argument('--cfg', default='configs/bigram.yaml', help='config file path')
     args = parser.parse_args()
 
     # Init config
