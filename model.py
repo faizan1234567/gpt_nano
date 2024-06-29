@@ -48,6 +48,6 @@ if __name__ == "__main__":
     attention_head = Head(emb_dim, head_dim=head_dim, dropout=dropout)
     x = torch.rand(4, 8, 32)
     output = attention_head(x)
-    print(output.shape) # B, T, head_dim
+    print(output.shape) 
 
     
