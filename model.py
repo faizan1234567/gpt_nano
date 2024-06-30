@@ -22,7 +22,7 @@ class Head(nn.Module):
         self.value = nn.Linear(self.n_emb, self.head_dim, bias=bias)
         self.register_buffer("tril", torch.tril(torch.ones(self.n_emb, self.n_emb)))
 
-        # dropout to randomly shut off some activations
+        # dropout to randomly turn off some activations 
         self.dropout = nn.Dropout(dropout)
     
     def forward(self, x):
