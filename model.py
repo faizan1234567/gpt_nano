@@ -4,6 +4,7 @@ implementation of building block of transformer decoder architecutre
 import torch
 import torch.nn.functional as F
 import torch.nn as nn
+from load_data import getDataset
 
 
 # Single head
@@ -102,6 +103,78 @@ class Block(nn.Module):
         return x        
 
 
+class GPTLanguageModel(nn.Module):
+    """GPT character level language model"""
+    def __init__(self, vocab_size: int = 65, block_size: int = 8, n_layer: int = 4, num_heads: int = 4, n_emb: int =32, 
+                 dropout: float = 0.2) -> None:
+        super().__init__()
+        self.vocab_size = vocab_size
+        self.block_size = block_size
+        self.n_layer = n_layer
+        self.num_heads = num_heads
+        self.n_emb = n_emb
+        self.dropout = dropout
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+
+        # Each token reads off the logits for the next token from the lookup table
+        self.tokens_embedding_table = nn.Embedding(self.vocab_size, self.n_emb)
+        self.position_embedding_table = nn.Embedding(self.block_size, self.n_emb)
+        self.blocks = nn.Sequential(*[Block(n_emb=self.n_emb, n_heads=self.num_heads, dropout= self.dropout) for _ in range(self.n_layer)])
+        self.ln_f = nn.LayerNorm(self.n_emb)
+        self.lm_head = nn.Linear(self.n_emb, self.vocab_size)
+
+        # Initialize model weights
+        self.apply(self._init_weights)
+
+    def _init_weights(self, module):
+        if isinstance(module, nn.Linear):
+            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
+            if module.bias is not None:
+                torch.nn.init.zeros_(module.bias)
+        elif isinstance(module, nn.Embedding):
+            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
+
+    def forward(self, idx, target = None):
+        B, T = idx.shape
+        
+        # (B, T, C)
+        token_emb = self.tokens_embedding_table(idx)
+        # (T, C)
+        positional_emb = self.position_embedding_table(torch.arange(T, device=self.device)) 
+        # (B, T, C)
+        x = token_emb + positional_emb
+        x = self.blocks(x)
+        x = self.ln_f(x)
+        
+        # (B, T, vocab_size)
+        logits = self.lm_head(x)
+
+        if target is None:
+            loss = None
+        else:
+            B, T, C = logits.shape
+            logits = logits.view(B*T, C)
+            targets = target.view(B*T)
+            loss = F.cross_entropy(logits, targets)
+        return logits, loss
+    
+    # Generate text
+    def generate(self, idx, max_new_tokens):
+        # Idx is (B, T) array of indices in the current context
+        for _ in range(max_new_tokens):
+            # crop index to last blok size token
+            idx_cond = idx[:, -self.block_size:]
+            # Get the predictions
+            logits, loss = self(idx_cond)
+            # Focus only on the last time step
+            logits = logits[:, -1, :] # becomes (B, C)
+            # Apply softmax to get probabilities
+            probs = F.softmax(logits, dim=-1) # (B, C)
+            # Sample from the distribution
+            idx_next = torch.multinomial(probs, num_samples=1) # (B, 1)
+            # Append sampled index to the running sequence
+            idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
+        return idx
 
 
 # test the code
@@ -109,11 +182,21 @@ if __name__ == "__main__":
     emb_dim = 32
     head_dim = 16
     dropout = 0.3
+    vocab_size = 65
+    n_layer = 10
+    num_heads = 6
+    dataset = getDataset(text_file='dataset/input.txt', block_size=8, 
+                         batch_size=4)
+    xb, yb = dataset.get_batch("train", 0.9)
     # attention_head = MulftiHeadAttention(num_heads=4, n_emb=emb_dim, head_dim=head_dim, dropout=dropout)
     # net = MLP(emb_dim, 0.2)
-    net = Block(n_emb=32, n_heads= 16, dropout= 0.3)
-    x = torch.rand(4, 8, 32)
-    output = net(x)
-    print(output.shape) 
+    # net = Block(n_emb=32, n_heads= 16, dropout= 0.3)
+    net = GPTLanguageModel(vocab_size=vocab_size, block_size=8, n_emb= emb_dim, 
+                           n_layer= n_layer, num_heads=num_heads, dropout=dropout)
+    device = net.device
+    net.to(device)
+    # x = torch.rand(4, 8, 32)
+    logit, loss = net(xb.to(device), yb.to(device))
+    print(logit, loss)
 
     
