@@ -92,7 +92,7 @@ class Block(nn.Module):
                                      dropout= self.dropout)
         # Feed forward layer
         self.mlp = MLP(n_emb= n_emb, dropout= self.dropout)
-        # Layer Norm
+        # Layer Norms
         self.l1 = nn.LayerNorm(n_emb)
         self.l2 = nn.LayerNorm(n_emb)
 
@@ -111,7 +111,7 @@ if __name__ == "__main__":
     dropout = 0.3
     # attention_head = MulftiHeadAttention(num_heads=4, n_emb=emb_dim, head_dim=head_dim, dropout=dropout)
     # net = MLP(emb_dim, 0.2)
-    net = Block(n_emb=32, n_heads= 4, dropout= 0.3)
+    net = Block(n_emb=32, n_heads= 16, dropout= 0.3)
     x = torch.rand(4, 8, 32)
     output = net(x)
     print(output.shape) 
