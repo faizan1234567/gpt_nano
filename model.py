@@ -176,25 +176,30 @@ class GPTLanguageModel(nn.Module):
             idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
         return idx
 
-
-# test the code
 if __name__ == "__main__":
+    # hyperparameters
     emb_dim = 32
     head_dim = 16
     dropout = 0.3
     vocab_size = 65
     n_layer = 10
     num_heads = 6
+
+    # load dataset
     dataset = getDataset(text_file='dataset/input.txt', block_size=8, 
                          batch_size=4)
     xb, yb = dataset.get_batch("train", 0.9)
-    # attention_head = MulftiHeadAttention(num_heads=4, n_emb=emb_dim, head_dim=head_dim, dropout=dropout)
+
+    # prepare model
+    # net = MulftiHeadAttention(num_heads=4, n_emb=emb_dim, head_dim=head_dim, dropout=dropout)
     # net = MLP(emb_dim, 0.2)
     # net = Block(n_emb=32, n_heads= 16, dropout= 0.3)
     net = GPTLanguageModel(vocab_size=vocab_size, block_size=8, n_emb= emb_dim, 
                            n_layer= n_layer, num_heads=num_heads, dropout=dropout)
     device = net.device
     net.to(device)
+
+    # inference
     # x = torch.rand(4, 8, 32)
     logit, loss = net(xb.to(device), yb.to(device))
     print(logit, loss)
