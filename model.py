@@ -77,6 +77,30 @@ class MLP(nn.Module):
         return x
 
 
+class Block(nn.Module):
+    """Transformer block: self attention, feed forward net and all the other
+    components"""
+    def __init__(self, n_emb: int, n_heads: int, dropout: float = 0.3):
+        super().__init__()
+        self.n_emb = n_emb
+        self.n_heads = n_heads
+        self.dropout = dropout
+
+        head_size = n_emb // n_heads
+        # Multi head self attention
+        self.sa = MultiHeadAttention(num_heads= n_heads, n_emb= n_emb, head_dim= head_size, 
+                                     dropout= self.dropout)
+        # Feed forward layer
+        self.mlp = MLP(n_emb= n_emb, dropout= self.dropout)
+        # Layer Norm
+        self.l1 = nn.LayerNorm(n_emb)
+        self.l2 = nn.LayerNorm(n_emb)
+
+    def forward(self, x):
+        x = x + self.sa(self.l1(x))
+        x = x + self.mlp(self.l2(x))
+        return x        
+
 
 
 
