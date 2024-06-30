@@ -67,9 +67,9 @@ class MLP(nn.Module):
         super().__init__()
         self.n_emb = n_emb
         self.dropout = dropout
-        self.net = nn.Sequential((n_emb, 4*n_emb), 
+        self.net = nn.Sequential(nn.Linear(n_emb, 4*n_emb), 
                                  nn.ReLU(), 
-                                 (4*n_emb, n_emb), 
+                                 nn.Linear(4*n_emb, n_emb), 
                                  nn.Dropout(dropout))
     
     def forward(self, x):
@@ -85,9 +85,10 @@ if __name__ == "__main__":
     emb_dim = 32
     head_dim = 16
     dropout = 0.3
-    attention_head = MultiHeadAttention(num_heads=4, n_emb=emb_dim, head_dim=head_dim, dropout=dropout)
+    # attention_head = MulftiHeadAttention(num_heads=4, n_emb=emb_dim, head_dim=head_dim, dropout=dropout)
+    net = MLP(emb_dim, 0.2)
     x = torch.rand(4, 8, 32)
-    output = attention_head(x)
+    output = net(x)
     print(output.shape) 
 
     
