@@ -38,9 +38,11 @@ class Head(nn.Module):
         attn_wei = self.dropout(attn_wei)
         v = self.value(x)
         # Weighted aggregation of the values
+        # (B, T, T) (B, T, head_size) --> (B, T, head_size)
         out = attn_wei @ v
         return out
 
+# test the code
 if __name__ == "__main__":
     emb_dim = 32
     head_dim = 16
