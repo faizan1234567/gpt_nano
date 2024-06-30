@@ -110,7 +110,8 @@ if __name__ == "__main__":
     head_dim = 16
     dropout = 0.3
     # attention_head = MulftiHeadAttention(num_heads=4, n_emb=emb_dim, head_dim=head_dim, dropout=dropout)
-    net = MLP(emb_dim, 0.2)
+    # net = MLP(emb_dim, 0.2)
+    net = Block(n_emb=32, n_heads= 4, dropout= 0.3)
     x = torch.rand(4, 8, 32)
     output = net(x)
     print(output.shape) 
