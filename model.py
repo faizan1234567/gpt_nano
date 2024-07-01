@@ -143,6 +143,7 @@ class GPTLanguageModel(nn.Module):
         positional_emb = self.position_embedding_table(torch.arange(T, device=self.device)) 
         # (B, T, C)
         x = token_emb + positional_emb
+        print(x.device)
         x = self.blocks(x)
         x = self.ln_f(x)
         
