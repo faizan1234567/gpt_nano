@@ -83,4 +83,4 @@ if __name__ == "__main__":
 
     # Generate the text
     print("\nThe AI poet:")
-    print(dataset.decode(model.generate(idx = torch.zeros((1, 1), dtype=torch.long), max_new_tokens=config.inference.max_new_tokens)[0].tolist()))
+    print(dataset.decode(model.generate(idx = torch.zeros((1, 1), dtype=torch.long).to(device), max_new_tokens=config.inference.max_new_tokens)[0].tolist()))
