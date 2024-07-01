@@ -34,16 +34,19 @@ if __name__ == "__main__":
     logger.addHandler(stream_handler)
 
     # if cuda available train with it
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     # Define model
     vocab_size = config.dataset.vocab_size
     if args.model == "GPT":
         model = GPTLanguageModel(vocab_size=vocab_size, block_size=config.general.block_size,
                                  n_layer=config.model.n_layers, num_heads= config.model.num_heads,
-                                 n_emb=config.model.n_emb, dropout=config.model.dropout).to(device)
+                                 n_emb=config.model.n_emb, dropout=config.model.dropout)
     else:
-        model = BigramLanguageModel(vocab_size).to(device)
+        model = BigramLanguageModel(vocab_size)
+    
+    # Push model to device
+    model = model.to(device)
     
     # Prepare dataset
     dataset = getDataset(text_file=config.dataset.fname, block_size=config.general.block_size, 
