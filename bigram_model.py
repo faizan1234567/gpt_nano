@@ -74,8 +74,8 @@ class BigramLanguageModel(nn.Module):
 @torch.no_grad()
 def estimate_loss(eval_iters, device, model=None, dataset=None):
     out = {}
-    model.to(device)
     model.eval()
+    model.to(device)
     for split in ['train', 'val']:
         losses = torch.zeros(eval_iters)
         for k in range(eval_iters):
