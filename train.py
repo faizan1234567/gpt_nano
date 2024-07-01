@@ -68,9 +68,9 @@ if __name__ == "__main__":
 
         for iter in range(config.training.iterations):
              
-            # if iter % config.training.eval_interval == 0:
-            #     losses = estimate_loss(config.training.eval_iters, device, model=model, dataset=dataset)
-            #     print(f"step {iter: 05d}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
+            if iter % config.training.eval_interval == 0:
+                losses = estimate_loss(config.training.eval_iters, device, model=model, dataset=dataset)
+                print(f"step {iter: 05d}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
 
 
             # Sample a batch of data

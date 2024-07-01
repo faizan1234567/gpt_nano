@@ -81,6 +81,7 @@ def estimate_loss(eval_iters, device, model=None, dataset=None):
             X, Y = dataset.get_batch(split, 0.9)
             X = X.to(device)
             Y = Y.to(device)
+            print(X.device, Y.device, model.device)
             logits, loss = model(X, Y)
             losses[k] = loss.item()
         out[split] = losses.mean()
