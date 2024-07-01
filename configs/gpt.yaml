@@ -1,0 +1,27 @@
+model:
+  n_emb: 32
+  num_heads: 6
+  head_dim: 16
+  n_layers: 16
+  dropout: 0.3
+  
+training:
+  batch_size: 4
+  lr: 0.001
+  iterations: 10000
+  train: True
+  eval_iters: 100
+  eval_interval: 1000
+
+dataset:
+  train_split: 0.9
+  fname: dataset/input.txt
+  vocab_size: 65
+
+# inference 
+inference:
+  max_new_tokens: 500
+
+general:
+  log: INFO
+  block_size: 8

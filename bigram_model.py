@@ -72,7 +72,7 @@ class BigramLanguageModel(nn.Module):
 
 # Get avg loss
 @torch.no_grad()
-def estimate_loss(eval_iters, device):
+def estimate_loss(eval_iters, device, model=None, dataset=None):
     out = {}
     model.eval()
     for split in ['train', 'val']:
