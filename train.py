@@ -41,7 +41,7 @@ if __name__ == "__main__":
     if args.model == "GPT":
         model = GPTLanguageModel(vocab_size=vocab_size, block_size=config.general.block_size,
                                  n_layer=config.model.n_layers, num_heads= config.model.num_heads,
-                                 n_emb=config.model.n_emb, dropout=config.model.dropout)
+                                 n_emb=config.model.n_emb, dropout=config.model.dropout).to(device)
     else:
         model = BigramLanguageModel(vocab_size).to(device)
     
