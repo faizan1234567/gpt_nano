@@ -8,6 +8,7 @@ import argparse
 from load_data import getDataset
 from model import GPTLanguageModel
 import yaml
+import os
 from pathlib import Path
 import logging
 from bigram_model import estimate_loss, BigramLanguageModel
@@ -17,6 +18,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--cfg', default='configs/bigram.yaml', help='config file path')
     parser.add_argument("--model", default="GPT", type = str, help="model to use for training either GPT or bigram" )
+    parser.add_argument('--save_ckpt', default= "weights/", type = str, help = "path to storing weights dir")
     args = parser.parse_args()
 
     # Init config
@@ -65,11 +67,23 @@ if __name__ == "__main__":
 
         # Typical pytorch training loop
         logger.info("Training\n")
-
+        best_loss = float('inf')
         for iter in range(config.training.iterations):
             model = model.to(device)
             if iter % config.training.eval_interval == 0:
                 losses = estimate_loss(config.training.eval_iters, device, model=model, dataset=dataset)
+                if best_loss >= losses['val']:
+                    best_loss = losses['val']
+                      # Save the model state, iteration, and other metadata
+                    checkpoint = {
+                        'iteration': iter,
+                        'model_state_dict': model.state_dict(),
+                        'optimizer_state_dict': optimizer.state_dict(),
+                        'best_loss': best_loss,
+                        'train_loss': losses['train'],
+                        'val_loss': losses['val']
+                    }
+                torch.save(checkpoint, os.path.join(args.save_ckpt, 'best_model_checkpoint.pth'))
                 print(f"step {iter: 05d}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
 
 
