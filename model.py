@@ -52,7 +52,7 @@ class MultiHeadAttention(nn.Module):
         self.head_size = head_dim
         self.dropout = dropout
 
-        self.heads = [Head(n_emb=n_emb, head_dim= head_dim) for _ in range(num_heads)]
+        self.heads = nn.ModuleList([Head(n_emb=n_emb, head_dim= head_dim) for _ in range(num_heads)])
         self.proj = nn.Linear(head_dim * num_heads, n_emb)
         self.dropout = nn.Dropout(self.dropout)
 

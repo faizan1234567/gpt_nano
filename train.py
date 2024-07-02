@@ -48,9 +48,6 @@ if __name__ == "__main__":
     else:
         model = BigramLanguageModel(vocab_size)
     
-    # Push model to device
-    m = model.to(device)
-    
     # Prepare dataset
     dataset = getDataset(text_file=config.dataset.fname, block_size=config.general.block_size, 
                          batch_size=config.training.batch_size)
@@ -89,4 +86,4 @@ if __name__ == "__main__":
 
     # Generate the text
     print("\nThe AI poet:")
-    print(dataset.decode(m.generate(idx = torch.zeros((1, 1), dtype=torch.long).to(device), max_new_tokens=config.inference.max_new_tokens)[0].tolist()))
+    print(dataset.decode(model.generate(idx = torch.zeros((1, 1), dtype=torch.long).to(device), max_new_tokens=config.inference.max_new_tokens)[0].tolist()))
