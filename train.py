@@ -46,7 +46,7 @@ if __name__ == "__main__":
         model = BigramLanguageModel(vocab_size)
     
     # Push model to device
-    model = model.to(device)
+    model = model
     
     # Prepare dataset
     dataset = getDataset(text_file=config.dataset.fname, block_size=config.general.block_size, 
