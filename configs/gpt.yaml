@@ -9,7 +9,7 @@ training:
   batch_size: 4
   lr: 0.001
   iterations: 10000
-  train: False
+  train: True
   eval_iters: 100
   eval_interval: 1000
 

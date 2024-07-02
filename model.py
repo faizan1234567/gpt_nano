@@ -114,7 +114,7 @@ class GPTLanguageModel(nn.Module):
         self.num_heads = num_heads
         self.n_emb = n_emb
         self.dropout = dropout
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         # Each token reads off the logits for the next token from the lookup table
         self.tokens_embedding_table = nn.Embedding(self.vocab_size, self.n_emb)
