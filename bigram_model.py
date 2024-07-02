@@ -72,18 +72,15 @@ class BigramLanguageModel(nn.Module):
 
 # Get avg loss
 @torch.no_grad()
-def estimate_loss(eval_iters, device, model=None, dataset=None):
+def estimate_loss(eval_iters, model=None, dataset=None):
     out = {}
     model.eval()
     for split in ['train', 'val']:
         losses = torch.zeros(eval_iters)
         for k in range(eval_iters):
             X, Y = dataset.get_batch(split, 0.9)
-            X = X.to(device)
-            Y = Y.to(device)
-            logits, loss = model(X, Y)
+            _, loss = model(X, Y)
             losses[k] = loss.item()
         out[split] = losses.mean()
-    model.to(device)
     model.train()
     return out

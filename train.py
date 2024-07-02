@@ -54,7 +54,7 @@ if __name__ == "__main__":
     dataset = getDataset(text_file=config.dataset.fname, block_size=config.general.block_size, 
                          batch_size=config.training.batch_size)
     
-    
+    model.to(device)
     if not config.training.train:
         logger.info("Without training") 
         xb, yb = dataset.get_batch("train", config.dataset.train_split)                    
@@ -69,7 +69,6 @@ if __name__ == "__main__":
         logger.info("Training\n")
         best_loss = float('inf')
         for iter in range(config.training.iterations):
-            model = model.to(device)
             if iter % config.training.eval_interval == 0:
                 losses = estimate_loss(config.training.eval_iters, device, model=model, dataset=dataset)
                 if best_loss >= losses['val']:
@@ -89,7 +88,6 @@ if __name__ == "__main__":
 
             # Sample a batch of data
             xb, yb =  dataset.get_batch("train", config.dataset.train_split) 
-            xb, yb  = xb.to(device), yb.to(device)
             # Evaluate the loss
             logits, loss = model(xb, yb)
             optimizer.zero_grad(set_to_none=True)

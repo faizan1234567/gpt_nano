@@ -17,6 +17,7 @@ class getDataset():
         self.text_file = text_file
         self.block_size = block_size
         self.batch_size = batch_size
+        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         
         self.text = self.get_text()
         self.chars = sorted(list(set(self.text)))
@@ -84,6 +85,8 @@ class getDataset():
         ix = torch.randint(len(data) - self.block_size, (self.batch_size,))
         x = torch.stack([data[i:i+self.block_size] for i in ix])
         y = torch.stack([data[i+1:i+1+self.block_size] for i in ix])
+        x = x.to(self.device)
+        y = y.to(self.device)
         return (x, y)
         
 
