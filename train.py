@@ -70,7 +70,7 @@ if __name__ == "__main__":
         best_loss = float('inf')
         for iter in range(config.training.iterations):
             if iter % config.training.eval_interval == 0:
-                losses = estimate_loss(config.training.eval_iters, device, model=model, dataset=dataset)
+                losses = estimate_loss(config.training.eval_iters, model=model, dataset=dataset)
                 if best_loss >= losses['val']:
                     best_loss = losses['val']
                       # Save the model state, iteration, and other metadata
