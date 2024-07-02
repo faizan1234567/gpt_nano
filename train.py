@@ -35,6 +35,9 @@ if __name__ == "__main__":
 
     # if cuda available train with it
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    if device != "cpu":
+        import os
+        os.environ['CUDA_VISIBLE_DEVICES'] ='0'
 
     # Define model
     vocab_size = config.dataset.vocab_size
