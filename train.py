@@ -70,7 +70,7 @@ if __name__ == "__main__":
         logger.info("Training\n")
 
         for iter in range(config.training.iterations):
-             
+            model = model.to(device)
             if iter % config.training.eval_interval == 0:
                 losses = estimate_loss(config.training.eval_iters, device, model=model, dataset=dataset)
                 print(f"step {iter: 05d}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
