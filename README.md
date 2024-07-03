@@ -1,11 +1,44 @@
-# gpt_nano
-Implementation of gpt_nano inspired by the gpt_nano repo and youtube tutorial by Andrej Karpathy
+# GPT-Nano: A light weight GPT model from scrath 
+Building a small text generation model from scrath. Inspired by the [YouTube video lecture]() by Andrej Karpathy.
 
-implementing a transformer powered text generation and understanding how
-ChatGPT works.
+The purpose of this project is to understand the inner workings of large GPT models. Large GPT models are trained on extensive corpora of textual data sourced from books, the internet, and other repositories, utilizing powerful GPUs. Following GPT protocols, a transformer-based decoder model will be trained on a smaller dataset to predict the next character in a sequence, in contrast to modern GPT models that use subword-level tokenization.
 
-this repo will add pipeline with different dataset such as shakes pere's dataset
-and other small text generation dataset to illustrate the text generation by
-powerful transform model. Also new concpets will be added in the repo to make more
-powerful for text generation.
- 
+Once trained, the model can generate text by starting with an initial random character. For example, if trained on Shakespeare's text, the model will produce text resembling Shakespeare's style.
+
+However, because we are modeling characters and working with limited data and sequence lengths, we should not expect the model to generate semantically coherent text.
+
+## Installation
+```bash
+ git clone https://github.com/faizan1234567/gpt_nano.git
+ cd gpt_nano
+```
+
+Create  a virtual enviroment using python venv
+```bash
+python3 -m venv saferail
+source saferail/bin/activate
+```
+alternatively, you can use anaconda package manager
+```bash
+conda create -n gpt_nano python=3.8.10 -y
+conda activate gpt_nano
+```
+
+Now install all the required dependencies
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+Installation done.!
+
+
+## Usage
+
+All the settings are located under `configs/`. There are two model variants in `configs `: `bigram.yaml` and `gpt.yaml`.  The last one is heavy, you might need a GPU Machine to run this. 
+
+To train the model, simply run `python train.py -h`. By default, the `bigram.yaml` config file will be loaded. To load GPT model, run 
+
+```
+python train.py --cfg configs/gpt.yaml --model "GPT"
+```
+

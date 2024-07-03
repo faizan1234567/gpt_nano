@@ -1,0 +1,7 @@
+# common pacakages
+numpy
+matplotlib
+pandas
+
+# DL framework
+torch
