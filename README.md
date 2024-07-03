@@ -59,5 +59,5 @@ python train.py --cfg configs/gpt.yaml --model "GPT" --save_ckpt <path>
 
 - This repository is based on the [video lecture](https://www.youtube.com/watch?v=kCc8FmEb1nY) and [GitHub repository](https://github.com/karpathy/ng-video-lecture) by Karpathy.
 - The transformer architecture was introduced in the [Attention is All You Need paper](https://arxiv.org/abs/1706.03762).
-- The Shakespeare dataset is available [here](https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt), provided by Karpathy.
+- The Shakespeare dataset [here](https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt)
 
