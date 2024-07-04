@@ -2,6 +2,7 @@
 numpy
 matplotlib
 pandas
+omegaconf
 
 # DL framework
 torch
