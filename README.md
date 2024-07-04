@@ -46,6 +46,37 @@ You can change other parameter on command line, like the `batch_size`, `block_si
 python train.py config_file=configs/gpt.yaml  training.batch_size=64 training.iterations=10000 general.block_size=512 model.num_heads=6
 ```
 
+## Sample Output
+Training 4 layer GPT decoder model on William Shakespeare's text. The sample file is located under `output` directory. 
+
+```bash
+YORTHUMBERLAND:
+Why, would yet stay be enought
+That he, the return by thy honour wrords bloody.
+
+ROMEO:
+There is froth, no meat ta'en, that all sad
+And winkless the impress'd that if thou lovest.
+Heart me, and hadst then droverenses with a pite.
+
+JULIET:
+I would thorow' the comes to deep to bed.
+Ah, for I! nay fearest good my swife in of the,
+This thoughts form oflly: if he refurnut no guess:
+As heree in hope other by all of grainty with contems
+For I be fear a despas; blessing thy warrant to daughter:
+'Tmer thou not brow, if she beggets 'he be to lives;
+Exp not selfs and drop himsh's boar;
+And he that I have done them as lives a doth feel.
+I
+DUKE VINCENTIO:
+I that thou know thou canst worth of thee.
+
+DUKE VINCENTIO:
+But too, on thou lovick that is but spitent
+As breast knees his bend wit ripecial what life.
+```
+
 ## Improvments
 - Saving best checkpoints as the loss decreases 
 - Seperating configuration settings and creating seperate files for each bigram and GPT  models
