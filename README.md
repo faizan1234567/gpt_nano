@@ -1,4 +1,4 @@
-# GPT-Nano: A light weight GPT model
+# GPT-Nano: A light weight GPT model for text generation
 Building a small text generation model from scrath. Inspired by the [YouTube video lecture]() by Andrej Karpathy.
 
 The purpose of this project is to understand the inner workings of large GPT models. Large GPT models are trained on extensive corpora of textual data sourced from books, the internet, and other repositories, utilizing powerful GPUs. Following GPT protocols, a transformer-based decoder model will be trained on a smaller dataset to predict the next character in a sequence, in contrast to modern GPT models that use subword-level tokenization.
@@ -50,6 +50,7 @@ python train.py config_file=configs/gpt.yaml  training.batch_size=64 training.it
 - Saving best checkpoints as the loss decreases 
 - Seperating configuration settings and creating seperate files for each bigram and GPT  models
 - Writing training loop for each of the model
+- data loading
 
 ## ToDo
 - [ ] Adding a seperate text generation script and streaming the model output with Gradio
