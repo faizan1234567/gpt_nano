@@ -98,5 +98,5 @@ Suggestions and PRs welcome.
 - This repository is based on the [video lecture](https://www.youtube.com/watch?v=kCc8FmEb1nY) and [GitHub repository](https://github.com/karpathy/ng-video-lecture) by Karpathy.
 - The transformer architecture was introduced in the [Attention is All You Need paper](https://arxiv.org/abs/1706.03762).
 - The Shakespeare dataset [here](https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt)
-- Command line code implementation and configs parameter values from [this cool repoistory](https://github.com/Usman-Rafique/GPT-Nano/tree/main). 
+- Command line code implementation and configs parameter values from [this cool repoistory](https://github.com/Usman-Rafique/GPT-Nano/tree/main)
 
