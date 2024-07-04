@@ -73,7 +73,7 @@ def main(args):
         # just print loss without training (to check if model works)
         logger.info("Without training") 
         xb, yb = dataset.get_batch("train", config.dataset.train_split)                    
-        logits, loss = model(xb, yb)
+        _, loss = model(xb, yb)
         logger.info(f"Loss without training: {loss.item()} ")
 
     else:
@@ -97,7 +97,7 @@ def main(args):
             optimizer.zero_grad(set_to_none=True)
             
             # evaluate model on a specific iteration
-            if iter % config.training.eval_interval == 0:
+            if iter % config.training.eval_interval == 0 or iter == config.traininig.iterations-1:
                 losses = estimate_loss(config.training.eval_iters, model=model, dataset=dataset)
                 train_loss, val_loss = losses["train"], losses["val"]
                 prog_bar.set_description(
@@ -128,8 +128,22 @@ def main(args):
         logger.info(f"Loss after training: {running_loss.item()/config.training.iterations}")
 
     # Generate the text
-    print("\nThe AI poet:")
-    print(dataset.decode(model.generate(idx = torch.zeros((1, 1), dtype=torch.long).to(device), max_new_tokens=config.inference.max_new_tokens)[0].tolist()))
+    print('Text Generation post training:')
+
+    for _ in range(3):
+        inital_char = torch.randint(0, vocab_size, (1,))
+        init_vals = inital_char.unsqueeze(0).to(device)
+        generated = model.generate(init_vals, 200)[0]
+        print('===============================\n', dataset.decode(generated.tolist()))
+
+    # save results to a text file
+    start_char = torch.zeros((1,)).long()
+    init_vals = start_char.unsqueeze(0).to(device)
+    fname_output = 'output/generated_text_' + config.training.train_model + '_' + config.dataset.fname.split(
+        '/')[-1] + '.txt'
+    with open(fname_output, 'w') as f:
+        generated = model.generate(init_vals, 5000)[0]
+        f.write(dataset.decode(generated.tolist()))
 
 
 # if the file directly run from the terminal
