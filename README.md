@@ -29,17 +29,21 @@ Now install all the required dependencies
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
-Installation done.!
 
 
 ## Usage
 
-All the settings are located under `configs/`. There are two model variants in `configs `: `bigram.yaml` and `gpt.yaml`.  The last one is heavy, you might need a GPU Machine to run this. 
+All the settings are located under `configs/`. There are two model variants in `configs `: `bigram.yaml` and `gpt.yaml`.  The last one is heavy, you might need a GPU machine to run this. It will about 4GB of GPU RAM with default settings. 
 
-To train the model, simply run `python train.py -h`. By default, the `bigram.yaml` config file will be loaded. To load GPT model, run 
+To train the model, simply run `python train.py`. By default, the `bigram.yaml` config file will be loaded. To load GPT model, run 
 
 ```
-python train.py --cfg configs/gpt.yaml --model "GPT" --save_ckpt <path>
+python train.py config_file=configs/gpt.yaml
+```
+You can change other parameter on command line, like the `batch_size`, `block_size`, `learning rate`, and number of `iterations`. 
+
+```
+python train.py config_file=configs/gpt.yaml  training.batch_size=64 training.iterations=10000 general.block_size=512 model.num_heads=6
 ```
 
 ## Improvments
