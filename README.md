@@ -47,7 +47,7 @@ python train.py config_file=configs/gpt.yaml  training.batch_size=64 training.it
 ```
 
 ## Sample Output
-Training 4 layer GPT decoder model on William Shakespeare's text. The sample file is located under `output` directory. 
+Training 4 layer GPT decoder model on William Shakespeare's text. The sample file is located under `output` directory. Poor Shakespeare's student right :joy:
 
 ```bash
 YORTHUMBERLAND:
