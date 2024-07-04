@@ -80,7 +80,7 @@ def main(args):
         # Train
         optimizer = torch.optim.AdamW(model.parameters(), config.training.lr)
 
-        logger.info('Number of paramaters (M):',
+        print('Number of paramaters (M):',
         sum(p.numel() for p in model.parameters()) / 1e6)
 
         # if compile the model
