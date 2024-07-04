@@ -97,7 +97,7 @@ def main(args):
             optimizer.zero_grad(set_to_none=True)
             
             # evaluate model on a specific iteration
-            if iter % config.training.eval_interval == 0 or iter == config.traininig.iterations-1:
+            if iter % config.training.eval_interval == 0 or iter == config.training.iterations-1:
                 losses = estimate_loss(config.training.eval_iters, model=model, dataset=dataset)
                 train_loss, val_loss = losses["train"], losses["val"]
                 prog_bar.set_description(
