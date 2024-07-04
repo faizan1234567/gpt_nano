@@ -1,5 +1,5 @@
 # GPT-Nano: A light weight GPT model for text generation
-Building a small text generation model from scrath. Inspired by the [YouTube video lecture]() by Andrej Karpathy.
+Building a small text generation model from scrath. Inspired by the [YouTube video lecture](https://www.youtube.com/watch?v=kCc8FmEb1nY&t=6533s&ab_channel=AndrejKarpathy) by Andrej Karpathy.
 
 The purpose of this project is to understand the inner workings of large GPT models. Large GPT models are trained on extensive corpora of textual data sourced from books, the internet, and other repositories, utilizing powerful GPUs. Following GPT protocols, a transformer-based decoder model will be trained on a smaller dataset to predict the next character in a sequence, in contrast to modern GPT models that use subword-level tokenization.
 
