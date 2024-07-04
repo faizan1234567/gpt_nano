@@ -2,7 +2,7 @@ model:
   n_emb: 384
   num_heads: 6
   head_dim: 256
-  n_layers: 10
+  n_layers: 4
   dropout: 0.3
   
 training:
