@@ -63,7 +63,7 @@ def main(args):
         model = BigramLanguageModel(vocab_size)
     
     torch.manual_seed(1337)
-    
+
     # Prepare dataset
     dataset = getDataset(text_file=config.dataset.fname, block_size=config.general.block_size, 
                          batch_size=config.training.batch_size)
@@ -113,7 +113,7 @@ def main(args):
                         'train_loss': train_loss,
                         'val_loss': val_loss
                     }
-                torch.save(checkpoint, os.path.join(args.save_ckpt, 'best_model_checkpoint.pth'))
+                torch.save(checkpoint, os.path.join(config.general.save_ckpt, 'best_model_checkpoint.pth'))
                 # print(f"step {iter: 05d}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
 
 

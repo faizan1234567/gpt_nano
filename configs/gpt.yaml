@@ -27,3 +27,4 @@ inference:
 general:
   log: INFO
   block_size: 8
+  save_ckpt: weights
