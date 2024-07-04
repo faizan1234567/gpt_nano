@@ -56,7 +56,7 @@ python train.py --cfg configs/gpt.yaml --model "GPT" --save_ckpt <path>
 - [x] Other tokenization techniques
 
 
-Suggestions and PRs welcome. I have trained the model for 10k iterations the model started to generated shakespere structured text but the text seems in spanish like language. haha
+Suggestions and PRs welcome.
 
 # Acknowledgements
 - This repository is based on the [video lecture](https://www.youtube.com/watch?v=kCc8FmEb1nY) and [GitHub repository](https://github.com/karpathy/ng-video-lecture) by Karpathy.
