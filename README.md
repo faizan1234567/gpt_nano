@@ -55,8 +55,10 @@ python train.py --cfg configs/gpt.yaml --model "GPT" --save_ckpt <path>
 - [x] Add installation / virtual environment instructions
 - [x] Other tokenization techniques
 
-# Acknowledgements
 
+Suggestions and PRs welcome. I have trained the model for 10k iterations the model started to generated shakespere structured text but the text seems in spanish like language. haha
+
+# Acknowledgements
 - This repository is based on the [video lecture](https://www.youtube.com/watch?v=kCc8FmEb1nY) and [GitHub repository](https://github.com/karpathy/ng-video-lecture) by Karpathy.
 - The transformer architecture was introduced in the [Attention is All You Need paper](https://arxiv.org/abs/1706.03762).
 - The Shakespeare dataset [here](https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt)

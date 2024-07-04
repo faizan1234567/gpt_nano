@@ -4,7 +4,7 @@ Train the GPTLanguage model
 import torch
 import torch.nn.functional as F
 import torch.nn as nn
-import argparse
+import sys
 from load_data import getDataset
 from model import GPTLanguageModel
 import yaml
@@ -13,17 +13,25 @@ from pathlib import Path
 import logging
 from bigram_model import estimate_loss, BigramLanguageModel
 from configs import from_dict
+from omegaconf import OmegaConf
+import tqdm
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--cfg', default='configs/bigram.yaml', help='config file path')
-    parser.add_argument("--model", default="GPT", type = str, help="model to use for training either GPT or bigram" )
-    parser.add_argument('--save_ckpt', default= "weights/", type = str, help = "path to storing weights dir")
-    args = parser.parse_args()
-
+def main(args):
     # Init config
-    config = yaml.safe_load(Path(args.cfg).open('r'))
-    config = from_dict(config)  # convert dict to object
+    cli_config = OmegaConf.from_cli(args)
+
+    # load the configuration settings
+    if 'config_file' not in cli_config:
+        config_file = 'configs/bigram.yaml'
+    else:
+        config_file = cli_config['config_file']
+
+    # read config file
+    config_from_file = OmegaConf.load(config_file)
+
+    # overide config with command line args
+    config = OmegaConf.merge(config_from_file, cli_config)
+    print('Configuration:', config)
 
     # Init logger
     logger = logging.getLogger(__name__)
@@ -35,9 +43,10 @@ if __name__ == "__main__":
 
     logger.addHandler(stream_handler)
 
-    # if cuda available train with it
+    # if cuda available enable it
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     if device != "cpu":
+        #BUG fix 
         import os
         os.environ['CUDA_VISIBLE_DEVICES'] ='0'
 
@@ -50,12 +59,14 @@ if __name__ == "__main__":
     else:
         model = BigramLanguageModel(vocab_size)
     
+    torch.manual_seed(1337)
     # Prepare dataset
     dataset = getDataset(text_file=config.dataset.fname, block_size=config.general.block_size, 
                          batch_size=config.training.batch_size)
     
     model.to(device)
     if not config.training.train:
+        # just print loss without training (to check if model works)
         logger.info("Without training") 
         xb, yb = dataset.get_batch("train", config.dataset.train_split)                    
         logits, loss = model(xb, yb)
@@ -65,37 +76,59 @@ if __name__ == "__main__":
         # Train
         optimizer = torch.optim.AdamW(model.parameters(), config.training.lr)
 
+        logger.info('Number of paramaters (M):',
+        sum(p.numel() for p in model.parameters()) / 1e6)
+
+        # if compile the model
+        if config.training.compile:
+            model = torch.compile(model)
+
         # Typical pytorch training loop
-        logger.info("Training\n")
+        logger.info(f"Training on {device}\n")
         best_loss = float('inf')
-        for iter in range(config.training.iterations):
+        running_loss = 0
+        prog_bar = tqdm.trange(config.training.iterations)
+
+        for iter in prog_bar:
+            optimizer.zero_grad(set_to_none=True)
+            
+            # evaluate model on a specific iteration
             if iter % config.training.eval_interval == 0:
                 losses = estimate_loss(config.training.eval_iters, model=model, dataset=dataset)
-                if best_loss >= losses['val']:
-                    best_loss = losses['val']
+                train_loss, val_loss = losses["train"], losses["val"]
+                prog_bar.set_description(
+                f'train loss:{(train_loss)/(iter+1):.4f}, {val_loss=:.4f}')
+                if best_loss >= val_loss:
+                    best_loss = val_loss
                       # Save the model state, iteration, and other metadata
                     checkpoint = {
                         'iteration': iter,
                         'model_state_dict': model.state_dict(),
                         'optimizer_state_dict': optimizer.state_dict(),
                         'best_loss': best_loss,
-                        'train_loss': losses['train'],
-                        'val_loss': losses['val']
+                        'train_loss': train_loss,
+                        'val_loss': val_loss
                     }
                 torch.save(checkpoint, os.path.join(args.save_ckpt, 'best_model_checkpoint.pth'))
-                print(f"step {iter: 05d}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
+                # print(f"step {iter: 05d}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
 
 
             # Sample a batch of data
             xb, yb =  dataset.get_batch("train", config.dataset.train_split) 
             # Evaluate the loss
-            logits, loss = model(xb, yb)
-            optimizer.zero_grad(set_to_none=True)
+            _, loss = model(xb, yb)
+            running_loss += loss
             loss.backward()
             optimizer.step()
         print()
-        logger.info(f"Loss after training: {loss.item()}")
+        logger.info(f"Loss after training: {running_loss.item()/config.training.iterations}")
 
     # Generate the text
     print("\nThe AI poet:")
     print(dataset.decode(model.generate(idx = torch.zeros((1, 1), dtype=torch.long).to(device), max_new_tokens=config.inference.max_new_tokens)[0].tolist()))
+
+
+# if the file directly run from the terminal
+if __name__ == "__main__":
+    # parse the args to the function
+    main(sys.argv[1:])
