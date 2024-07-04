@@ -46,7 +46,7 @@ def main(args):
     # if cuda available enable it
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     if device != "cpu":
-        #BUG fix 
+        # BUG fix 
         import os
         os.environ['CUDA_VISIBLE_DEVICES'] ='0'
 
@@ -128,6 +128,7 @@ def main(args):
         logger.info(f"Loss after training: {running_loss.item()/config.training.iterations}")
 
     # Generate the text
+    print()
     print('Text Generation post training:')
 
     for _ in range(3):

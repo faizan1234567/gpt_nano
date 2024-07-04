@@ -1,17 +1,17 @@
 model:
-  n_emb: 32
+  n_emb: 384
   num_heads: 6
-  head_dim: 16
-  n_layers: 16
+  head_dim: 256
+  n_layers: 10
   dropout: 0.3
   
 training:
-  batch_size: 4
-  lr: 0.001
-  iterations: 10000
+  batch_size: 64
+  lr: 0.0003
+  iterations: 6000
   train: True
   eval_iters: 100
-  eval_interval: 1000
+  eval_interval: 200
   train_model: GPT
   compile: False
 
@@ -26,5 +26,5 @@ inference:
 
 general:
   log: INFO
-  block_size: 8
+  block_size: 256
   save_ckpt: weights

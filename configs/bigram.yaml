@@ -2,12 +2,12 @@
 
 # training settings
 training:
-  batch_size: 4
-  lr: 0.001
-  iterations: 10000
+  batch_size: 64
+  lr: 0.0003
+  iterations: 5000
   train: True
   eval_iters: 100
-  eval_interval: 1000
+  eval_interval: 200
   train_model: bigram
   compile: False
 
@@ -23,7 +23,7 @@ inference:
 
 general:
   log: INFO
-  block_size: 8
+  block_size: 256
   save_ckpt: weights
 
 
