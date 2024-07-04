@@ -9,6 +9,7 @@ training:
   eval_iters: 100
   eval_interval: 1000
   train_model: bigram
+  compile: False
 
 # dataset settings
 dataset:
