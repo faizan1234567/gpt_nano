@@ -12,6 +12,7 @@ training:
   train: True
   eval_iters: 100
   eval_interval: 1000
+  train_model: GPT
 
 dataset:
   train_split: 0.9

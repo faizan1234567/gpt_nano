@@ -52,14 +52,18 @@ def main(args):
 
     # Define model
     vocab_size = config.dataset.vocab_size
-    if args.model == "GPT":
+    if config.training.train_model == "GPT":
         model = GPTLanguageModel(vocab_size=vocab_size, block_size=config.general.block_size,
                                  n_layer=config.model.n_layers, num_heads= config.model.num_heads,
                                  n_emb=config.model.n_emb, dropout=config.model.dropout)
+    elif config.training.train_model == "bigram":
+        model = BigramLanguageModel(vocab_size)
     else:
+        print('Training with Bigram model')
         model = BigramLanguageModel(vocab_size)
     
     torch.manual_seed(1337)
+    
     # Prepare dataset
     dataset = getDataset(text_file=config.dataset.fname, block_size=config.general.block_size, 
                          batch_size=config.training.batch_size)
