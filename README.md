@@ -87,7 +87,7 @@ As breast knees his bend wit ripecial what life.
 - [ ] Adding a seperate text generation script and streaming the model output with Gradio
 - [ ] Training on Urdu dataset, suggestions welcome ;) 
 - [ ] Adding Multi GPU training support for large dataset for bigger network as we scale up
-- [ ] chaning configs values with command line args
+- [x] chaning configs values with command line args
 - [x] Add installation / virtual environment instructions
 - [x] Other tokenization techniques
 
