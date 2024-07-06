@@ -1,5 +1,11 @@
 """
-Train the GPTLanguage model
+======================================================================
+Train the GPTLanguage model from scratch
+
+Configurations settings can be changed from command line
+example:
+python train.py config_file=configs/bigram.yaml training.batch_size=32
+======================================================================
 """
 import torch
 import torch.nn.functional as F
