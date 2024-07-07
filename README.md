@@ -1,5 +1,5 @@
 # GPT-Nano: A light weight GPT model for text generation
-Building a small text generation model from scrath. Inspired by the [YouTube video lecture](https://www.youtube.com/watch?v=kCc8FmEb1nY&t=6533s&ab_channel=AndrejKarpathy) by Andrej Karpathy.
+Building a small text generation model from scratch. Inspired by the [YouTube video lecture](https://www.youtube.com/watch?v=kCc8FmEb1nY&t=6533s&ab_channel=AndrejKarpathy) by Andrej Karpathy.
 
 The purpose of this project is to understand the inner workings of large GPT models. Large GPT models are trained on extensive corpora of textual data sourced from books, the internet, and other repositories, utilizing powerful GPUs. Following GPT protocols, a transformer-based decoder model will be trained on a smaller dataset to predict the next character in a sequence, in contrast to modern GPT models that use subword-level tokenization.
 
@@ -40,14 +40,14 @@ To train the model, simply run `python train.py`. By default, the `bigram.yaml` 
 ```
 python train.py config_file=configs/gpt.yaml
 ```
-You can change other parameter on command line, like the `batch_size`, `block_size`, `learning rate`, and number of `iterations`. 
+You can change other parameter on command line, like the `batch_size`, `block_size`, `learning rate`, number of `iterations`, and other parameters. 
 
 ```
 python train.py config_file=configs/gpt.yaml  training.batch_size=64 training.iterations=10000 general.block_size=512 model.num_heads=6
 ```
 
 ## Sample Output
-Training 4 layer GPT decoder model on William Shakespeare's text. The sample file is located under `output` directory. Poor Shakespeare's student right :joy:
+Training 4 layer GPT decoder model on William Shakespeare's text. The sample file is located under `output` directory. The model learns the structure and starts to geneartes accurate and grammatically correct words considering small architecture, dataset, and training for just 5000 iterations. 
 
 ```bash
 YORTHUMBERLAND:
@@ -95,7 +95,7 @@ As breast knees his bend wit ripecial what life.
 Suggestions and PRs welcome.
 
 # Acknowledgements
-- This repository is based on the [video lecture](https://www.youtube.com/watch?v=kCc8FmEb1nY) and [GitHub repository](https://github.com/karpathy/ng-video-lecture) by Karpathy.
+- This repository is based on the [video lecture](https://www.youtube.com/watch?v=kCc8FmEb1nY) 
 - The transformer architecture was introduced in the [Attention is All You Need paper](https://arxiv.org/abs/1706.03762).
 - The Shakespeare dataset [here](https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt)
 - Command line code implementation and configs parameter values from [this cool repoistory](https://github.com/Usman-Rafique/GPT-Nano/tree/main)
