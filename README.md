@@ -92,8 +92,6 @@ As breast knees his bend wit ripecial what life.
 - [x] Other tokenization techniques
 
 
-Suggestions and PRs welcome.
-
 # Acknowledgements
 - This repository is based on the fantastic [video lecture](https://www.youtube.com/watch?v=kCc8FmEb1nY) by Karpathy. 
 - The transformer architecture was introduced in the [Attention is All You Need paper](https://arxiv.org/abs/1706.03762).
